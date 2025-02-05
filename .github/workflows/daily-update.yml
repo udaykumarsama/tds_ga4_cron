@@ -1,0 +1,27 @@
+name: Daily Commit Update
+
+on:
+  schedule:
+    - cron: "0 3 * * *" # Runs every day at 03:00 UTC
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  update-repo:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create a daily update
+        run: echo "Update on $(date)" >> daily-update.txt
+
+      - name: Commit and push changes (udaykumar.sama@straive.com)
+        run: |
+          git config --local user.email "udaysama08@gmail.com"
+          git config --local user.name "GitHub Actions Bot"
+          git add daily-update.txt
+          git commit -m "Automated daily update [skip ci]" || exit 0
+          git push
